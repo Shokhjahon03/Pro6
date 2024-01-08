@@ -1,13 +1,24 @@
-import  { Fragment, useRef, useState } from 'react'
+
+import { Fragment, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
+// import Auth from './Auth';
+import {createContext} from 'react';
+import Tuth from './Tuth';
+
+export let ValuContext=createContext()
+
 export default function Home() {
+   
+    // .......................................
+  
+    let[error,setError]=useState(true)
     let [values,setValues]=useState([])
     let oneInp=useRef()
     let twoInp=useRef()
     let telInp=useRef()
     let handalSubmit=(event)=>{
         event.preventDefault()
-        if(oneInp.current.value!=='' && twoInp.current.value!=='' && telInp.current.value!==''){
+        if(oneInp.current.value!=='' && twoInp.current.value!=='' && telInp.current.value!=='' && telInp.current.value.length>12){
              setValues((prev)=>{
                 return [...prev,{
                     names:oneInp.current.value,
@@ -17,6 +28,9 @@ export default function Home() {
                 }]
             })
             console.log(values);
+            setError(true)
+        }else{
+            setError(false)
         }
         
     }
@@ -48,10 +62,12 @@ export default function Home() {
             e.tel
         ))
     }
-    
+   
   return (
-    <Fragment>
-      <div className="hero mt-[120px]">
+    
+     <ValuContext.Provider value={values}>
+        {/* <Tuth/> */}
+     <div className="hero mt-[120px]">
         <div className="container">
             <div className="forms  flex justify-between  pt-[50px] relative">
                 <form id='for' className='form w-[40%] flex flex-col items-start pl-[20px] gap-[50px]'>
@@ -70,7 +86,8 @@ export default function Home() {
                         ADD
                         </span>
                     </button>
-
+                    <p className={error ? ' hidden':'text-red-600 block'}>Tel nomer 12ta raqamdan kam bo'ldi yoki ism va lavozim kiritilmadi</p>
+                    
                 </form>
                 <span className=' w-[1px] h-[300px] inline-block border border-sky-950'></span>
                 <div className='w-[40%]  border-2 p-5 '>
@@ -95,7 +112,7 @@ export default function Home() {
                 </div>
             </div>
         </div>
-      </div>
-    </Fragment>
+       </div>
+     </ValuContext.Provider>
   )
 }
